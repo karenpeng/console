@@ -2,7 +2,7 @@ var stackTrace = require('stack-trace');
 var trace = stackTrace.get();
 require('assert').strictEqual(trace[0].getFileName(), __filename);
 
-console.log(trace[0].getFileName(), __filename);
+console.log('just ckecking... ', trace[0].getFileName(), __filename);
 
 /*
 test1
@@ -25,16 +25,16 @@ function foo() {
 
 /*
 test2
-Code below shows all layers of the first callsite
+Code below shows all layers of the callsite on top of the stack
  */
 
-function fib() {
-  _fib(0, 1);
+function fib1() {
+  _fib1(0, 1);
 }
 
 var counter1 = 0;
 
-function _fib(_pre, _cur) {
+function _fib1(_pre, _cur) {
 
   var pre = _cur;
   var cur = pre + _pre;
@@ -49,30 +49,31 @@ function _fib(_pre, _cur) {
     var i = 0
 
     // CallSites.forEach(function (callsite, i) {
-    console.log('%s level: %s, pre: %s, cur: %s, type: %s, function: %s, method: %s, filename: %s, line: %s, column: %s',
-      new Array(i + 1).join(' '), i, pre, cur, callsite.getTypeName(), callsite.getFunctionName(), callsite.getMethodName(), callsite.getFileName(),
+    console.log('%s counter: %s, level: %s, pre: %s, cur: %s, type: %s, function: %s, method: %s, filename: %s, line: %s, column: %s',
+      new Array(i + 1).join(' '), counter1, i, pre, cur, callsite.getTypeName(), callsite.getFunctionName(), callsite.getMethodName(), callsite.getFileName(),
       callsite.getLineNumber(), callsite.getColumnNumber());
     //  });
 
     counter1++;
 
-    _fib(pre, cur);
+    _fib1(pre, cur);
   }
 }
 
-fib();
+fib1();
 
-/*
-test3
-Code below shows the last callste with all the layers
- */
-function fib() {
-  _fib(0, 1);
+console.log('--------------------------------------------------------------------------------------------------------------------------------------------------------------------')
+  /*
+  test3
+  Code below shows all the callsites in the stack from the first 10 calls of fibonacci
+   */
+function fib2() {
+  _fib2(0, 1);
 }
 
 var counter2 = 0;
 
-function _fib(_pre, _cur) {
+function _fib2(_pre, _cur) {
   var pre = _cur;
   var cur = _pre + _cur;
 
@@ -87,11 +88,11 @@ function _fib(_pre, _cur) {
 
     counter2++;
 
-    _fib(pre, cur);
+    _fib2(pre, cur);
   }
 }
 
-fib();
+fib2();
 
 /*
 test4
