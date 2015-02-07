@@ -132,40 +132,43 @@ try a more complicated function binary search
  */
 var counter4 = 0;
 
-function doSearch(array, targetValue) {
-  var min = 0;
-  var max = array.length - 1;
-  var guess = Math.floor((max + min) / 2);
-  var arr = array;
+function binarySearch(array, targetValue, min, max) {
 
-  stack().forEach(function (callsite, i) {
-    console.log('%s counter: %s, level: %s, guess: %s, arr: %s, type: %s, function: %s, method: %s, filename: %s, line: %s, column: %s',
-      new Array(i + 1).join(' '), counter4, i, guess, arr, callsite.getTypeName(), callsite.getFunctionName(), callsite.getMethodName(), callsite.getFileName(),
-      callsite.getLineNumber(), callsite.getColumnNumber());
-  })
+  var min = min || 0;
+  var max = max || array.length - 1;
+  var guess;
 
-  counter2++;
+  if (max < min) return -1;
 
-  if (max < 1) return -1;
+  else {
 
-  if (array[guess] === targetValue) {
+    guess = Math.floor((max + min) / 2);
 
-    return guess;
+    if (array[guess] === targetValue) {
 
-  } else if (array[guess] > targetValue) {
+      return guess;
 
-    arr = array.slice(min, guess - 1);
+    } else if (array[guess] > targetValue) {
 
-  } else {
+      max = guess - 1;
 
-    arr = array.slice(guess, max);
+    } else {
+
+      min = guess + 1;
+    }
+
+    stack().forEach(function (callsite, i) {
+      console.log('%s counter: %s, level: %s, guess: %s, type: %s, function: %s, method: %s, filename: %s, line: %s, column: %s',
+        new Array(i + 1).join(' '), counter4, i, guess, callsite.getTypeName(), callsite.getFunctionName(), callsite.getMethodName(), callsite.getFileName(),
+        callsite.getLineNumber(), callsite.getColumnNumber());
+    });
+
+    return binarySearch(array, targetValue, min, max);
+
   }
 
-  doSearch(arr, targetValue);
-
-  //return -1;
-};
+}
 
 var test4 = [2, 2, 4, 6, 6, 6, 7, 13, 15, 64, 64, 246, 346];
 
-console.log(doSearch(test4, 6));
+console.log(binarySearch(test4, 6));
