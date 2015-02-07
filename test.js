@@ -34,7 +34,7 @@ function _fib1(_pre, _cur) {
   var pre = _cur;
   var cur = pre + _pre;
 
-  if (counter1 < 10) {
+  if (counter1 < 5) {
 
     //var callsite = CallSites[CallSites.length - 1]
     var callsite = stack()[0]
@@ -53,12 +53,14 @@ function _fib1(_pre, _cur) {
   }
 }
 
+console.log('All layers of the callsite on top of the stack:\n');
+
 fib1();
 
-console.log('-----------------------------------------------------------------------------------------------------------------------------------------------------------------------')
+console.log('\n-----------------------------------------------------------------------------------------------------------------------------------------------------------------------\n')
   /*
   test3
-  Code below shows all the callsites in the stack from the first 10 calls of fibonacci
+  Code below shows all the callsites in the stack from the first 5 calls of fibonacci
    */
 function fib2() {
   _fib2(0, 1);
@@ -70,7 +72,7 @@ function _fib2(_pre, _cur) {
   var pre = _cur;
   var cur = _pre + _cur;
 
-  if (counter2 < 10) {
+  if (counter2 < 5) {
 
     stack().forEach(function (callsite, i) {
       console.log('%s counter: %s, level: %s, pre: %s, cur: %s, type: %s, function: %s, method: %s, filename: %s, line: %s, column: %s',
@@ -84,25 +86,27 @@ function _fib2(_pre, _cur) {
   }
 }
 
+console.log('All the callsites in the stack from the first 5 calls of fibonacci:\n');
+
 fib2();
+
+console.log('\n-----------------------------------------------------------------------------------------------------------------------------------------------------------------------\n')
 
 /*
 test4
+trying es6 generator
  */
-
-/*
-test5
- */
+// var counter3 = 0;
 
 // function* fibonacci() {
 
-//   var CallSites = stackTrace.get();
-
-//   CallSites.forEach(function (callsite, i) {
-//     console.log('%s level: %s, type: %s, function: %s, method: %s, filename: %s, line: %s, column: %s',
-//       new Array(i + 1).join(' '), i, callsite.getTypeName(), callsite.getFunctionName(), callsite.getMethodName(), callsite.getFileName(),
+//   stack().forEach(function (callsite, i) {
+//     console.log('%s counter: %s, level: %s, type: %s, function: %s, method: %s, filename: %s, line: %s, column: %s',
+//       new Array(i + 1).join(' '), counter3, i, callsite.getTypeName(), callsite.getFunctionName(), callsite.getMethodName(), callsite.getFileName(),
 //       callsite.getLineNumber(), callsite.getColumnNumber());
 //   });
+
+//   counter3++;
 
 //   let pre = 0,
 //     cur = 1,
@@ -119,5 +123,49 @@ test5
 
 // setInterval(function () {
 //   //console.log(fibonacci().next());
-//   fibonacci().next();
+//   //fibonacci().next();
 // }, 10000);
+
+/*
+test5
+try a more complicated function binary search
+ */
+var counter4 = 0;
+
+function doSearch(array, targetValue) {
+  var min = 0;
+  var max = array.length - 1;
+  var guess = Math.floor((max + min) / 2);
+  var arr = array;
+
+  stack().forEach(function (callsite, i) {
+    console.log('%s counter: %s, level: %s, guess: %s, arr: %s, type: %s, function: %s, method: %s, filename: %s, line: %s, column: %s',
+      new Array(i + 1).join(' '), counter4, i, guess, arr, callsite.getTypeName(), callsite.getFunctionName(), callsite.getMethodName(), callsite.getFileName(),
+      callsite.getLineNumber(), callsite.getColumnNumber());
+  })
+
+  counter2++;
+
+  if (max < 1) return -1;
+
+  if (array[guess] === targetValue) {
+
+    return guess;
+
+  } else if (array[guess] > targetValue) {
+
+    arr = array.slice(min, guess - 1);
+
+  } else {
+
+    arr = array.slice(guess, max);
+  }
+
+  doSearch(arr, targetValue);
+
+  //return -1;
+};
+
+var test4 = [2, 2, 4, 6, 6, 6, 7, 13, 15, 64, 64, 246, 346];
+
+console.log(doSearch(test4, 6));
